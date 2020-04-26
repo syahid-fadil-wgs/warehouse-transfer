@@ -64,6 +64,7 @@ public class ItemServiceImpl implements ItemService {
 		return repo.findById(id).orElse(null);
 	}
 	
+	@Transactional(rollbackOn = Exception.class)
 	public void update(Long id, @Valid ItemParam param) throws Exception {
 		validate(param, id);
 		ItemModel entity = findById(id);

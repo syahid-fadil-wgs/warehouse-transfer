@@ -64,6 +64,7 @@ public class BranchServiceImpl implements BranchService {
 		return repo.findById(id).orElse(null);
 	}
 	
+	@Transactional(rollbackOn = Exception.class)
 	public void update(Long id, @Valid BranchParam param) throws Exception {
 		validate(param, id);
 		BranchModel entity = findById(id);

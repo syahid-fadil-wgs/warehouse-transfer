@@ -134,6 +134,7 @@ public class UserServiceImpl implements UserService {
 		return repo.findById(id).orElse(null);
 	}
 	
+	@Transactional(rollbackOn = Exception.class)
 	public void update(Long id, @Valid UserParam param) throws Exception {
 		validate(param, id);
 		UserModel entity = findById(id);

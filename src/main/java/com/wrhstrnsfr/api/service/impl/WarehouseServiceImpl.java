@@ -74,6 +74,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 		return repo.findById(id).orElse(null);
 	}
 	
+	@Transactional(rollbackOn = Exception.class)
 	public void update(Long id, @Valid WarehouseParam param) throws Exception {
 		validate(param, id);
 		WarehouseModel entity = findById(id);
