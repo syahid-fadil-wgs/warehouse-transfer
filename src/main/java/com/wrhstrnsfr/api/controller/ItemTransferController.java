@@ -98,6 +98,8 @@ public class ItemTransferController {
 		}
 		return JsonResponseUtil.success(null);
 	}
+	
+	@GetMapping("/movement")
 	public ResponseEntity<BaseResponse<Page<ItemMovementModel>>> listItemMove(@RequestParam(defaultValue = "1") int page,
 			@RequestParam(defaultValue = "20") int limit) {
 		Page<ItemMovementModel> data = service.listItemMove(page, limit);

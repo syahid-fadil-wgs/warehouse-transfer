@@ -49,6 +49,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					antMatchers("/").permitAll().
 					antMatchers("/api/login").permitAll().
 					antMatchers("/api/user/**").hasRole("SUPERADMIN").
+					antMatchers("/api/branch/**").hasRole("SUPERADMIN").
+					antMatchers("/api/warehouse/**").hasRole("SUPERADMIN").
+					antMatchers("/api/branch/all").hasAnyRole("SUPERADMIN", "ADMIN").
+					antMatchers("/api/warehouse/all").hasAnyRole("SUPERADMIN", "ADMIN").
 				// all other requests need to be authenticated
 				anyRequest().authenticated().and().
 				// make sure we use stateless session; session won't be used to
