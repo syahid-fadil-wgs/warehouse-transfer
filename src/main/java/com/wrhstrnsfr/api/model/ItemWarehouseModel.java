@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "user_warehouses")
+@Table(name = "item_warehouses")
 @Embeddable
 @Getter
 @Setter
