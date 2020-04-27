@@ -14,6 +14,8 @@ import com.wrhstrnsfr.api.model.BranchModel;
 import com.wrhstrnsfr.api.model.ItemModel;
 import com.wrhstrnsfr.api.model.RoleModel;
 import com.wrhstrnsfr.api.model.UserModel;
+import com.wrhstrnsfr.api.model.UserRoleIdModel;
+import com.wrhstrnsfr.api.model.UserRoleModel;
 import com.wrhstrnsfr.api.model.UserWarehouseIdModel;
 import com.wrhstrnsfr.api.model.UserWarehouseModel;
 import com.wrhstrnsfr.api.model.WarehouseModel;
@@ -21,6 +23,7 @@ import com.wrhstrnsfr.api.repository.BranchRepository;
 import com.wrhstrnsfr.api.repository.ItemRepository;
 import com.wrhstrnsfr.api.repository.RoleRepository;
 import com.wrhstrnsfr.api.repository.UserRepository;
+import com.wrhstrnsfr.api.repository.UserRoleRepository;
 import com.wrhstrnsfr.api.repository.UserWarehouseRepository;
 import com.wrhstrnsfr.api.repository.WarehouseRepository;
 
@@ -44,6 +47,9 @@ public class DataSeeder {
 	
 	@Autowired
 	ItemRepository itemRepo;
+	
+	@Autowired
+	UserRoleRepository userRoleRepo;
 	
 	@PostConstruct
 	public void seed() {
@@ -80,15 +86,26 @@ public class DataSeeder {
 			List<UserModel> users = new ArrayList<>();
 			UserModel user = new UserModel(null, "superadmin", "Superadmin", pass, false);
 			userRepo.save(user);
+			
+			RoleModel role = roleRepo.findByRoleName("superadmin");
+			UserRoleIdModel userRoleId = new UserRoleIdModel(user, role);
+			UserRoleModel userRole = new UserRoleModel(userRoleId);
+			userRoleRepo.saveAndFlush(userRole);
+			
 			UserWarehouseModel userWarehouse;
 			for (WarehouseModel row: warehouses) {
 				user = new UserModel(null, "admin." + String.valueOf(row.getWarehouseId()), "Admin " + row.getWarehouseName(), pass, false);
-				userRepo.save(user);
+				userRepo.saveAndFlush(user);
 				
 				UserWarehouseIdModel userWarehouseId = new UserWarehouseIdModel(user, row.getBranch(), row);
 				userWarehouse = new UserWarehouseModel(userWarehouseId);
 				
-				userWarehouseRepo.save(userWarehouse);
+				userWarehouseRepo.saveAndFlush(userWarehouse);
+				
+				role = roleRepo.findByRoleName("superadmin");
+				userRoleId = new UserRoleIdModel(user, role);
+				userRole = new UserRoleModel(userRoleId);
+				userRoleRepo.saveAndFlush(userRole);
 			}
 		}
 		
@@ -98,5 +115,6 @@ public class DataSeeder {
 			
 			itemRepo.saveAll(Arrays.asList(item, item2));
 		}
+		
 	}
 }
