@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.wrhstrnsfr.api.model.ItemInModel;
@@ -67,8 +68,8 @@ public class ItemTransferServiceImpl implements ItemTransferService {
 	@Override
 	@Transactional(rollbackOn = Exception.class)
 	public void saveItemIn(ItemInOutParam param) throws Exception {
-		Long userId = (long)1;
-		UserModel user = userRepo.findById(userId).orElse(null);
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		UserModel user = userRepo.findByUsername(username);
 		
 		ItemModel item = itemRepo.findById(param.getItemId()).orElse(null);
 		if (item == null) {
@@ -130,16 +131,17 @@ public class ItemTransferServiceImpl implements ItemTransferService {
 
 	@Override
 	public Page<ItemInModel> listItemIn(int page, int limit) {
-		Long userId = (long)1;
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		UserModel user = userRepo.findByUsername(username);
 		Pageable pageable = PageRequest.of(page - 1, limit);
-		return itemInRepo.findAll(userId, pageable);
+		return itemInRepo.findAll(user.getId(), pageable);
 	}
 
 	@Override
 	@Transactional(rollbackOn = Exception.class)
 	public void saveItemOut(ItemInOutParam param) throws Exception {
-		Long userId = (long)1;
-		UserModel user = userRepo.findById(userId).orElse(null);
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		UserModel user = userRepo.findByUsername(username);
 		
 		ItemModel item = itemRepo.findById(param.getItemId()).orElse(null);
 		if (item == null) {
@@ -166,16 +168,17 @@ public class ItemTransferServiceImpl implements ItemTransferService {
 
 	@Override
 	public Page<ItemOutModel> listItemOut(int page, int limit) {
-		Long userId = (long)1;
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		UserModel user = userRepo.findByUsername(username);
 		Pageable pageable = PageRequest.of(page - 1, limit);
-		return itemOutRepo.findAll(userId, pageable);
+		return itemOutRepo.findAll(user.getId(), pageable);
 	}
 
 	@Override
 	@Transactional(rollbackOn = Exception.class)
 	public void saveItemTransfer(ItemTransferParam param) throws Exception {
-		Long userId = (long)1;
-		UserModel user = userRepo.findById(userId).orElse(null);
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		UserModel user = userRepo.findByUsername(username);
 
 		UserWarehouseModel userWarehouse = userWarehouseRepo.findByUser(user);
 		WarehouseModel warehouse = userWarehouse.getEid().getWarehouse();
@@ -212,16 +215,17 @@ public class ItemTransferServiceImpl implements ItemTransferService {
 
 	@Override
 	public Page<ItemTransferModel> listItemTransfer(int page, int limit) {
-		Long userId = (long)1;
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		UserModel user = userRepo.findByUsername(username);
 		Pageable pageable = PageRequest.of(page - 1, limit);
-		return itemTransferRepo.findAll(userId, pageable);
+		return itemTransferRepo.findAll(user.getId(), pageable);
 	}
 
 	@Override
 	@Transactional(rollbackOn = Exception.class)
 	public void pickupItemTransfer(Long id) throws Exception {
-		Long userId = (long)2;
-		UserModel user = userRepo.findById(userId).orElse(null);
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		UserModel user = userRepo.findByUsername(username);
 		
 		ItemTransferModel transfer = itemTransferRepo.findById(id).orElse(null);
 		if (transfer == null) {
@@ -236,9 +240,10 @@ public class ItemTransferServiceImpl implements ItemTransferService {
 
 	@Override
 	public Page<ItemMovementModel> listItemMove(int page, int limit) {
-		Long userId = (long)1;
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		UserModel user = userRepo.findByUsername(username);
 		Pageable pageable = PageRequest.of(page - 1, limit);
-		return itemMoveRepo.findAll(userId, pageable);
+		return itemMoveRepo.findAll(user.getId(), pageable);
 	}
 	
 }
